@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/handlebars.js"></script>
+  <script type="module" src="/javascripts/app.js"></script>
+
+
+</head>
+<body>
+  <header class=" py-8 px-4 bg-purple-800">
+    <h1 class="text-4xl font-sans text-center text-white">Contact Manager</h1>
+    <p class="text-center text-white text-opacity-50">Using backbone.js, LocalStorage, RequireJS, Handlebar and TailwindCSS</p>
+  </header>
+  <main>
+  </main>
+  <footer class="mt-8 mx-4 p-4 border-t text-xs text-gray-500">Developed by Nabil Kazerouni as part of <a href="http://www.launchschool.com" class="text-blue-500 hover:text-blue-700 underline">Launchschool</a></footer>
+</body>
+<script id='search_bar' type='text/x-handlebars' data-type="partial">
+    <div class="p-4 flex bg-gray-200">
+      <input class="flex-auto mr-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" class="" placeholder="Search">
+      <a href="" class="flex-none bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded eventhandler-add-contact">Add Contact</a> 
+    </div>
+</script>
+<script id="empty_list" type="text/x-handlebars" data-type="partial">
+  <div class="flex flex-col items-center space-y-4 m-8 px-8 py-4 bg-gray-200 border rounded">
+    <h1 class="text-2xl font-sans text-center">There are no contacts.</h1>
+    <a href="" class="max-w-xs bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded text-center eventhandler-add-contact">Add Contact</a>
+  </div>
+</script>
+<script id="list_view" type="text/x-handlebars">
+  {{> search_bar}}
+  {{#if hasItems}}
+    {{> list_items}}
+  {{else}}
+    {{> empty_list}}
+  {{/if}}
+</script>
+<script id='form_template' type='text/x-handlebars'>
+  <form>
+  <fieldset class="flex flex-col space-y-6 m-8">
+    <div>
+      <label for="full_name">Full name:</label>
+      <input type="text" name="full_name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+    </div>
+    <div>  
+      <label for="email">Email address:</label>
+      <input type="email" pattern="[^@]+@[^\.]+\..+" name="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+    </div>
+
+    <div>  
+      <label for="phone_number">Phone number:</label>
+      <input type="text" name="phone_number" id="phone_number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+    </div>
+
+    <div>  
+      <label for="tags">Tags:</label>
+      <input type="text" pattern="^[a-zA-Z0-9](,[a-zA-Z0-9])*$" name="tags" id="tags" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+      <small class="text-xs">Format: comma separated tags</small>
+    </div>
+
+    <div class="flex flex-col space-y-4">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">submit</button>
+      <a id='form-cancel' class="text-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Cancel</a>
+    </div>
+  </fieldset>
+  </form>
+</script>
+<script id='list_items' type='text/x-handlebars' data-type="partial">
+  <div class="px-8 py-6 flex flex-row flex-wrap space-x-8">
+  {{#each items}}
+    <article id="{{this.id}}" class="px-6 py-4 w-1/4 rounded overflow-hidden shadow-lg">
+      <header class="font-bold text-xl mb-2 capitalize">{{this.full_name}}</header>
+      <dl class="pb-4">
+        <dt class="mt-2 text-xs uppercase font-bold tracking-wide text-gray-500">Phone number</dt>
+        <dd class="mb-2 text-gray-700 text-base">{{this.phone_number}}</dd>
+        <dt class="mt-2 text-xs uppercase font-bold tracking-wide text-gray-500">Email</dt>
+        <dd class="mb-2 text-gray-700 text-base">{{this.email}}</dd>
+        <dt class="mt-2 text-xs uppercase font-bold tracking-wide text-gray-500">Tags</dt>
+        <dd class="mt-1 mb-2">
+          {{#each (splitStr this.tags)}}
+            <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#{{this}}</span>
+          {{/each}}
+        </dd>
+      </dl>
+      <div class="border-t pt-2 flex items-center justify-start space-x-4">
+        <a href="" class="inline-block align-baseline font-bold text-sm uppercase tracking-wide text-blue-500 hover:text-blue-800 eventhandler-update-contact">Edit</a>
+        <a href="" class="inline-block align-baseline font-bold text-sm uppercase tracking-wide text-gray-700 hover:text-gray-900 eventhandler-delete-contact">Delete</a>
+      </div>
+    </article>
+  {{/each}}
+  <div>
+</script>
+</html>

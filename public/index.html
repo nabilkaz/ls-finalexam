@@ -23,68 +23,35 @@
 </body>
 <script id='search_bar' type='text/x-handlebars' data-type="partial">
     <div class="p-4 flex bg-gray-200">
-      <input class="flex-auto mr-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" class="" placeholder="Search">
+      <input class="flex-auto mr-4 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline eventhandler-search-list" type="text" class="" placeholder="Search">
       <a href="" class="flex-none bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded eventhandler-add-contact">Add Contact</a> 
     </div>
 </script>
-<script id="empty_list" type="text/x-handlebars" data-type="partial">
-  <div class="flex flex-col items-center space-y-4 m-8 px-8 py-4 bg-gray-200 border rounded">
-    <h1 class="text-2xl font-sans text-center">There are no contacts.</h1>
-    <a href="" class="max-w-xs bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded text-center eventhandler-add-contact">Add Contact</a>
-  </div>
-</script>
-<script id="list_view" type="text/x-handlebars">
+<script id="main_view" type="text/x-handlebars">
   {{> search_bar}}
+  {{> list_view}}
+</script>
+<script id="list_view" type="text/x-handlebars" data-type="partial">
   {{#if hasItems}}
     {{> list_items}}
   {{else}}
     {{> empty_list}}
   {{/if}}
 </script>
-<script id='form_template' type='text/x-handlebars'>
-  <form>
-  <fieldset class="flex flex-col space-y-6 m-8">
-    <div>
-      <label for="full_name">Full name:</label>
-      <input type="text" name="full_name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-    </div>
-    <div>  
-      <label for="email">Email address:</label>
-      <input type="email" pattern="[^@]+@[^\.]+\..+" name="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-    </div>
-
-    <div>  
-      <label for="phone_number">Phone number:</label>
-      <input type="text" name="phone_number" id="phone_number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-    </div>
-
-    <div>  
-      <label for="tags">Tags:</label>
-      <input type="text" pattern="^[a-zA-Z0-9](,[a-zA-Z0-9])*$" name="tags" id="tags" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-      <small class="text-xs">Format: comma separated tags</small>
-    </div>
-
-    <div class="flex flex-col space-y-4">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">submit</button>
-      <a id='form-cancel' class="text-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Cancel</a>
-    </div>
-  </fieldset>
-  </form>
-</script>
 <script id='list_items' type='text/x-handlebars' data-type="partial">
-  <div class="px-8 py-6 flex flex-row flex-wrap space-x-8">
+  <div id="list" class="px-8 py-6 flex flex-row flex-wrap">
   {{#each items}}
-    <article id="{{this.id}}" class="px-6 py-4 w-1/4 rounded overflow-hidden shadow-lg">
+    <article id="{{this.id}}" class="flex flex-col px-6 py-4 mt-4 mr-4 w-64 rounded overflow-hidden shadow-lg">
       <header class="font-bold text-xl mb-2 capitalize">{{this.full_name}}</header>
-      <dl class="pb-4">
+      <dl class="pb-4 flex-grow">
         <dt class="mt-2 text-xs uppercase font-bold tracking-wide text-gray-500">Phone number</dt>
         <dd class="mb-2 text-gray-700 text-base">{{this.phone_number}}</dd>
         <dt class="mt-2 text-xs uppercase font-bold tracking-wide text-gray-500">Email</dt>
         <dd class="mb-2 text-gray-700 text-base">{{this.email}}</dd>
         <dt class="mt-2 text-xs uppercase font-bold tracking-wide text-gray-500">Tags</dt>
-        <dd class="mt-1 mb-2">
+        <dd class="flex flex-row flex-wrap mt-1 mb-2">
           {{#each (splitStr this.tags)}}
-            <span class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#{{this}}</span>
+            <a href="" class="bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 eventhandler-filter-list">#{{this}}</a>
           {{/each}}
         </dd>
       </dl>
@@ -95,5 +62,71 @@
     </article>
   {{/each}}
   <div>
+</script>
+<script id="empty_list" type="text/x-handlebars" data-type="partial">
+  <div id="list" class="flex flex-col items-center space-y-4 m-8 px-8 py-4 bg-gray-200 border rounded">
+    {{#if term}}
+      <h1 class="text-2xl font-sans text-center">There are no contacts starting with {{term}}</h1>
+    {{else}}
+      <h1 class="text-2xl font-sans text-center">There are no contacts.</h1>
+      <a href="" class="max-w-xs bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded text-center eventhandler-add-contact">Add Contact</a>
+    {{/if}}
+  </div>
+</script>
+<script id='form_template' type='text/x-handlebars'>
+  <form id="{{this.id}}">
+  <fieldset class="flex flex-col space-y-6 m-8">
+    <div>
+      <label for="full_name">Full name:</label>
+      <input 
+        type="text"  
+        name="full_name" 
+        id="name"
+        value="{{this.full_name}}"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        required>
+    </div>
+    <div>  
+      <label for="email">Email address:</label>
+      <input 
+        type="email" 
+        pattern="[^@]+@[^\.]+\..+" 
+        name="email" 
+        id="email" 
+        value="{{this.email}}"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        required>
+    </div>
+
+    <div>  
+      <label for="phone_number">Phone number:</label>
+      <input 
+        type="text" 
+        name="phone_number" 
+        id="phone_number" 
+        value="{{this.phone_number}}"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        required>
+    </div>
+
+    <div>  
+      <label for="tags">Tags:</label>
+      <input 
+        type="text"
+        pattern="^[a-zA-Z0-9](,[a-zA-Z0-9])*$" 
+        name="tags" 
+        id="tags" 
+        value="{{this.tags}}"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        required>
+      <small class="text-xs">Format: comma separated tags</small>
+    </div>
+
+    <div class="flex flex-col space-y-4">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">submit</button>
+      <a id='form-cancel' class="text-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Cancel</a>
+    </div>
+  </fieldset>
+  </form>
 </script>
 </html>

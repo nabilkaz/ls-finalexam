@@ -26,7 +26,7 @@ index/
     │   └── empty_list // handles both list without items and no results
     └── form_template // handles both updates and new submissions
 ```
-The styling was administered used (TailwindCSS)[https://tailwindcss.com/]. It takes a utlity-first approach to styling components.
+The styling was administered used [TailwindCSS](https://tailwindcss.com/). It takes a utlity-first approach to styling components.
 
 ### Form view
 `form_template` pulls in contact data and adds it to the form values and id (the key identifier for the contact). If there is none. The values simply don't register. Upon submission there is an event-handler in `app.js` that checks if there is an `id` attribute on the `form` tag. If so it submits it as an update using the `contactsAPI` method `update(id, data)` otherwise it'll submit it as new contact with the `add(data)` method.
